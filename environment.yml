@@ -1,5 +1,6 @@
 name: DQ-DETR
 channels:
+  - pytorch
   - conda-forge
 dependencies:
   - python
@@ -15,6 +16,7 @@ dependencies:
   - timm
   - yapf
   - cython=0.29.*
+  - pip
   - pip:
       - git+https://github.com/jwwangchn/cocoapi-aitod.git#subdirectory=aitodpycocotools
       - git+https://github.com/cocodataset/panopticapi.git#egg=panopticapi
