@@ -1,7 +1,5 @@
 # DQ-DETR: DETR with Dynamic Query for Tiny Object Detection
 
-[method](./figure/model_final_V4.pdf)
-
 * This repository is an official implementation of the paper DQ-DETR: DETR with Dynamic Query for Tiny Object Detection.
 * The original repository link was https://github.com/Katie0723/DQ-DETR. Here is the updated link.
 
@@ -11,17 +9,36 @@
 
 [2024/5/3]: **DNTR** has been accepted by **TGRS 2024**. 🔥🔥🔥
 
-## Installation -- Compiling CUDA operators
+## Method
+
+![](figure/model.jpg)
+
+## Installation
 
 * The code are built upon the official [DINO DETR](https://github.com/IDEA-Research/DINO) repository.
 
 ```sh
-conda create -n dqdetr python=3.9 --y
-conda activate dqdetr
-bash install.sh
+conda env create -f environment.yml
+conda activate DQ-DETR
 ```
 
-[//]: # (bash scripts/DQ_eval.sh /nfs/home/hoiliu/dqdetr/weights/dqdetr_best305.pth)
+* Compiling CUDA operators
+
+```sh
+cd models/dqdetr/ops
+python setup.py build install
+
+# unit test (should see all checking is True)
+python test.py
+cd ../../..
+```
+
+## Download Pretrained Weights
+
+https://reurl.cc/NlvV2Q
+
+* pretrain_model.pth => pretained model
+* dqdetr_best305.pth => DQ-DETR model on AITOD-V2 with 30.5 AP
 
 ## Eval models
 
@@ -56,11 +73,6 @@ denotes Faster R-CNN and DetectoRS, respectively.
 |   DAB-DETR   |   R-50   |   22.4   |      55.6       |      14.3       |       9.0       |      21.7      |      28.3      |      38.7      | 
 |  DINO-DETR   |   R-50   |   25.9   |      61.3       |      17.5       |      12.7       |      25.3      |      32.0      |      39.7      | 
 |   DQ-DETR    |   R-50   | **30.5** |    **69.2**     |    **22.7**     |    **15.2**     |    **30.9**    |    **36.8**    |    **45.5**    |
-
-## Pretrained Weights
-
-* Referred to checkpoint.txt for more details.
-* https://reurl.cc/NlvV2Q
 
 ## Citation
 
