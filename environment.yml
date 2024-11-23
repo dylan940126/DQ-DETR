@@ -1,7 +1,5 @@
 name: DQ-DETR
 channels:
-  - pytorch
-  - nvidia
   - conda-forge
 dependencies:
   - python
