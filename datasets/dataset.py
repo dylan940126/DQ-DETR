@@ -12,7 +12,8 @@ import io
 
 class TSVDataset(Dataset):
     """ TSV dataset for ImageNet 1K training
-    """    
+    """
+
     def __init__(self, tsv_file, transform=None, target_transform=None):
         self.tsv = TSVFile(tsv_file)
         self.transform = transform

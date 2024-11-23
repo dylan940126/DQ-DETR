@@ -26,6 +26,7 @@ class PositionEmbeddingSine(nn.Module):
     This is a more standard version of the position embedding, very similar to the one
     used by the Attention is all you need paper, generalized to work on images.
     """
+
     def __init__(self, num_pos_feats=64, temperature=10000, normalize=False, scale=None):
         super().__init__()
         self.num_pos_feats = num_pos_feats
@@ -59,11 +60,13 @@ class PositionEmbeddingSine(nn.Module):
         pos = torch.cat((pos_y, pos_x), dim=3).permute(0, 3, 1, 2)
         return pos
 
+
 class PositionEmbeddingSineHW(nn.Module):
     """
     This is a more standard version of the position embedding, very similar to the one
     used by the Attention is all you need paper, generalized to work on images.
     """
+
     def __init__(self, num_pos_feats=64, temperatureH=10000, temperatureW=10000, normalize=False, scale=None):
         super().__init__()
         self.num_pos_feats = num_pos_feats
@@ -84,8 +87,6 @@ class PositionEmbeddingSineHW(nn.Module):
         y_embed = not_mask.cumsum(1, dtype=torch.float32)
         x_embed = not_mask.cumsum(2, dtype=torch.float32)
 
-
-
         if self.normalize:
             eps = 1e-6
             y_embed = y_embed / (y_embed[:, -1:, :] + eps) * self.scale
@@ -103,14 +104,14 @@ class PositionEmbeddingSineHW(nn.Module):
         pos_y = torch.stack((pos_y[:, :, :, 0::2].sin(), pos_y[:, :, :, 1::2].cos()), dim=4).flatten(3)
         pos = torch.cat((pos_y, pos_x), dim=3).permute(0, 3, 1, 2)
 
-
-
         return pos
+
 
 class PositionEmbeddingLearned(nn.Module):
     """
     Absolute pos embedding, learned.
     """
+
     def __init__(self, num_pos_feats=256):
         super().__init__()
         self.row_embed = nn.Embedding(50, num_pos_feats)
@@ -140,7 +141,7 @@ def build_position_encoding(args):
     if args.position_embedding in ('v2', 'sine'):
         # TODO find a better way of exposing other arguments
         position_embedding = PositionEmbeddingSineHW(
-            N_steps, 
+            N_steps,
             temperatureH=args.pe_temperatureH,
             temperatureW=args.pe_temperatureW,
             normalize=True

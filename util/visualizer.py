@@ -20,37 +20,40 @@ from matplotlib.patches import Polygon
 from pycocotools import mask as maskUtils
 from matplotlib import transforms
 
+
 def renorm(img: torch.FloatTensor, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) \
         -> torch.FloatTensor:
     # img: tensor(3,H,W) or tensor(B,3,H,W)
     # return: same as img
-    assert img.dim() == 3 or img.dim() == 4, "img.dim() should be 3 or 4 but %d" % img.dim() 
+    assert img.dim() == 3 or img.dim() == 4, "img.dim() should be 3 or 4 but %d" % img.dim()
     if img.dim() == 3:
         assert img.size(0) == 3, 'img.size(0) shoule be 3 but "%d". (%s)' % (img.size(0), str(img.size()))
-        img_perm = img.permute(1,2,0)
+        img_perm = img.permute(1, 2, 0)
         mean = torch.Tensor(mean)
         std = torch.Tensor(std)
         img_res = img_perm * std + mean
-        return img_res.permute(2,0,1)
-    else: # img.dim() == 4
+        return img_res.permute(2, 0, 1)
+    else:  # img.dim() == 4
         assert img.size(1) == 3, 'img.size(1) shoule be 3 but "%d". (%s)' % (img.size(1), str(img.size()))
-        img_perm = img.permute(0,2,3,1)
+        img_perm = img.permute(0, 2, 3, 1)
         mean = torch.Tensor(mean)
         std = torch.Tensor(std)
         img_res = img_perm * std + mean
-        return img_res.permute(0,3,1,2)
+        return img_res.permute(0, 3, 1, 2)
+
 
 class ColorMap():
-    def __init__(self, basergb=[255,255,0]):
+    def __init__(self, basergb=[255, 255, 0]):
         self.basergb = np.array(basergb)
+
     def __call__(self, attnmap):
         # attnmap: h, w. np.uint8.
         # return: h, w, 4. np.uint8.
         assert attnmap.dtype == np.uint8
         h, w = attnmap.shape
         res = self.basergb.copy()
-        res = res[None][None].repeat(h, 0).repeat(w, 1) # h, w, 3
-        attn1 = attnmap.copy()[..., None] # h, w, 1
+        res = res[None][None].repeat(h, 0).repeat(w, 1)  # h, w, 3
+        attn1 = attnmap.copy()[..., None]  # h, w, 1
         res = np.concatenate((res, attn1), axis=-1).astype(np.uint8)
         return res
 
@@ -70,16 +73,18 @@ class COCOVisualizer():
         ax = plt.gca()
         img = renorm(img).permute(1, 2, 0)
         ax.imshow(img)
-        
+
         self.addtgt(tgt)
         if show_in_console:
             plt.show()
 
         if savedir is not None:
             if caption is None:
-                savename = '{}/{}-{}.png'.format(savedir, int(tgt['image_id']), str(datetime.datetime.now()).replace(' ', '-'))
+                savename = '{}/{}-{}.png'.format(savedir, int(tgt['image_id']),
+                                                 str(datetime.datetime.now()).replace(' ', '-'))
             else:
-                savename = '{}/{}-{}-{}.png'.format(savedir, caption, int(tgt['image_id']), str(datetime.datetime.now()).replace(' ', '-'))
+                savename = '{}/{}-{}-{}.png'.format(savedir, caption, int(tgt['image_id']),
+                                                    str(datetime.datetime.now()).replace(' ', '-'))
             print("savename: {}".format(savename))
             os.makedirs(os.path.dirname(savename), exist_ok=True)
             plt.savefig(savename)
@@ -93,7 +98,7 @@ class COCOVisualizer():
         """
         assert 'boxes' in tgt
         ax = plt.gca()
-        H, W = tgt['size'].tolist() 
+        H, W = tgt['size'].tolist()
         numbox = tgt['boxes'].shape[0]
 
         color = []
@@ -104,10 +109,11 @@ class COCOVisualizer():
             unnormbbox[:2] -= unnormbbox[2:] / 2
             [bbox_x, bbox_y, bbox_w, bbox_h] = unnormbbox.tolist()
             boxes.append([bbox_x, bbox_y, bbox_w, bbox_h])
-            poly = [[bbox_x, bbox_y], [bbox_x, bbox_y+bbox_h], [bbox_x+bbox_w, bbox_y+bbox_h], [bbox_x+bbox_w, bbox_y]]
-            np_poly = np.array(poly).reshape((4,2))
+            poly = [[bbox_x, bbox_y], [bbox_x, bbox_y + bbox_h], [bbox_x + bbox_w, bbox_y + bbox_h],
+                    [bbox_x + bbox_w, bbox_y]]
+            np_poly = np.array(poly).reshape((4, 2))
             polygons.append(Polygon(np_poly))
-            c = (np.random.random((1, 3))*0.6+0.4).tolist()[0]
+            c = (np.random.random((1, 3)) * 0.6 + 0.4).tolist()[0]
             color.append(c)
 
         p = PatchCollection(polygons, facecolor=color, linewidths=0, alpha=0.1)
@@ -127,5 +133,3 @@ class COCOVisualizer():
 
         if 'caption' in tgt:
             ax.set_title(tgt['caption'], wrap=True)
-
-

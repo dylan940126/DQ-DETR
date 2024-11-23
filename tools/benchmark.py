@@ -18,7 +18,6 @@ import os
 from posixpath import join
 import sys
 
-
 sys.path.append(os.path.dirname(sys.path[0]))
 
 import numpy as np
@@ -69,7 +68,7 @@ def get_shape(val: object) -> typing.List[int]:
 
 
 def addmm_flop_jit(
-    inputs: typing.List[object], outputs: typing.List[object]
+        inputs: typing.List[object], outputs: typing.List[object]
 ) -> typing.Counter[str]:
     """
     This method counts the flops for fully connected layers with torch script.
@@ -151,16 +150,16 @@ def _reduction_op_flop_jit(inputs, outputs, reduce_flops=1, finalize_flops=0):
     out_elements = prod(output_shapes[0])
 
     num_flops = in_elements * reduce_flops + out_elements * (
-        finalize_flops - reduce_flops
+            finalize_flops - reduce_flops
     )
 
     return num_flops
 
 
 def conv_flop_count(
-    x_shape: typing.List[int],
-    w_shape: typing.List[int],
-    out_shape: typing.List[int],
+        x_shape: typing.List[int],
+        w_shape: typing.List[int],
+        out_shape: typing.List[int],
 ) -> typing.Counter[str]:
     """
     This method counts the flops for convolution. Note only multiplication is
@@ -182,7 +181,7 @@ def conv_flop_count(
 
 
 def conv_flop_jit(
-    inputs: typing.List[object], outputs: typing.List[object]
+        inputs: typing.List[object], outputs: typing.List[object]
 ) -> typing.Counter[str]:
     """
     This method counts the flops for convolution using torch script.
@@ -211,7 +210,7 @@ def conv_flop_jit(
 
 
 def einsum_flop_jit(
-    inputs: typing.List[object], outputs: typing.List[object]
+        inputs: typing.List[object], outputs: typing.List[object]
 ) -> typing.Counter[str]:
     """
     This method counts the flops for the einsum operation. We currently support
@@ -259,7 +258,7 @@ def einsum_flop_jit(
 
 
 def matmul_flop_jit(
-    inputs: typing.List[object], outputs: typing.List[object]
+        inputs: typing.List[object], outputs: typing.List[object]
 ) -> typing.Counter[str]:
     """
     This method counts the flops for matmul.
@@ -292,7 +291,7 @@ def matmul_flop_jit(
 
 
 def batchnorm_flop_jit(
-    inputs: typing.List[object], outputs: typing.List[object]
+        inputs: typing.List[object], outputs: typing.List[object]
 ) -> typing.Counter[str]:
     """
     This method counts the flops for batch norm.
@@ -411,7 +410,6 @@ _SUPPORTED_OPS: typing.Dict[str, typing.Callable] = {
     "aten::mm": matmul_flop_jit,
 }
 
-
 # A list that contains ignored operations.
 _IGNORED_OPS: typing.List[str] = [
     "aten::Int",
@@ -474,10 +472,10 @@ _HAS_ALREADY_SKIPPED = False
 
 
 def flop_count(
-    model: nn.Module,
-    inputs: typing.Tuple[object, ...],
-    whitelist: typing.Union[typing.List[str], None] = None,
-    customized_ops: typing.Union[typing.Dict[str, typing.Callable], None] = None,
+        model: nn.Module,
+        inputs: typing.Tuple[object, ...],
+        whitelist: typing.Union[typing.List[str], None] = None,
+        customized_ops: typing.Union[typing.Dict[str, typing.Callable], None] = None,
 ) -> typing.DefaultDict[str, float]:
     """
     Given a model and an input to the model, compute the Gflops of the given
@@ -511,8 +509,8 @@ def flop_count(
 
     # Torch script does not support parallell torch models.
     if isinstance(
-        model,
-        (nn.parallel.distributed.DistributedDataParallel, nn.DataParallel),
+            model,
+            (nn.parallel.distributed.DistributedDataParallel, nn.DataParallel),
     ):
         model = model.module  # pyre-ignore
 
@@ -622,8 +620,8 @@ def benchmark():
         else:
             raise ValueError("Key {} can used by args only".format(k))
 
-    #print(main_args) #namespace
-    #print("-------------------------------------------------------------")
+    # print(main_args) #namespace
+    # print("-------------------------------------------------------------")
     dataset = build_dataset("test", main_args)
     model, _, _ = build_model_main(main_args)
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)

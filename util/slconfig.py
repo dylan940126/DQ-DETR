@@ -22,6 +22,7 @@ def check_file_exist(filename, msg_tmpl='file "{}" does not exist'):
     if not osp.isfile(filename):
         raise FileNotFoundError(msg_tmpl.format(filename))
 
+
 class ConfigDict(Dict):
 
     def __missing__(self, name):
@@ -64,6 +65,7 @@ class SLConfig(object):
         "Config [path: /home/kchen/projects/mmcv/tests/data/config/a.py]: "
         "{'item1': [1, 2], 'item2': {'a': 0}, 'item3': True, 'item4': 'test'}"
     """
+
     @staticmethod
     def _validate_py_syntax(filename):
         with open(filename) as f:
@@ -159,7 +161,7 @@ class SLConfig(object):
         b = b.copy()
         for k, v in a.items():
             if isinstance(v, dict) and k in b and not v.pop(DELETE_KEY, False):
-            
+
                 if not isinstance(b[k], dict) and not isinstance(b[k], list):
                     # if :
 
@@ -178,16 +180,15 @@ class SLConfig(object):
                         f'index {k} should be an int when input but {type(k)}'
                     )
                 b[int(k)] = SLConfig._merge_a_into_b(v, b[int(k)])
-            else:   
+            else:
                 b[k] = v
-                
+
         return b
 
     @staticmethod
     def fromfile(filename):
         cfg_dict, cfg_text = SLConfig._file2dict(filename)
         return SLConfig(cfg_dict, cfg_text=cfg_text, filename=filename)
-
 
     def __init__(self, cfg_dict=None, cfg_text=None, filename=None):
         if cfg_dict is None:
@@ -209,7 +210,6 @@ class SLConfig(object):
         else:
             text = ''
         super(SLConfig, self).__setattr__('_text', text)
-
 
     @property
     def filename(self):
@@ -309,10 +309,9 @@ class SLConfig(object):
             based_on_style='pep8',
             blank_line_before_nested_class_or_def=True,
             split_before_expression_after_opening_paren=True)
-        #text, _ = FormatCode(text, style_config=yapf_style, verify=True)
+        # text, _ = FormatCode(text, style_config=yapf_style, verify=True)
         text, _ = FormatCode(text, style_config=yapf_style)
         return text
-    
 
     def __repr__(self):
         return f'Config (path: {self.filename}): {self._cfg_dict.__repr__()}'
@@ -392,7 +391,6 @@ class SLConfig(object):
     def __setstate__(self, state):
         self.__init__(state)
 
-
     def copy(self):
         return SLConfig(self._cfg_dict.copy())
 
@@ -432,4 +430,3 @@ class DictAction(Action):
                 val = val[0]
             options[key] = val
         setattr(namespace, self.dest, options)
-

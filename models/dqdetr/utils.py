@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from torch import nn
 
 
-def gen_encoder_output_proposals(memory:Tensor, memory_padding_mask:Tensor, spatial_shapes:Tensor, learnedwh=None):
+def gen_encoder_output_proposals(memory: Tensor, memory_padding_mask: Tensor, spatial_shapes: Tensor, learnedwh=None):
     """
     Input:
         - memory: bs, \sum{hw}, d_model
@@ -34,7 +34,7 @@ def gen_encoder_output_proposals(memory:Tensor, memory_padding_mask:Tensor, spat
 
         grid_y, grid_x = torch.meshgrid(torch.linspace(0, H_ - 1, H_, dtype=torch.float32, device=memory.device),
                                         torch.linspace(0, W_ - 1, W_, dtype=torch.float32, device=memory.device))
-        grid = torch.cat([grid_x.unsqueeze(-1), grid_y.unsqueeze(-1)], -1) # H_, W_, 2
+        grid = torch.cat([grid_x.unsqueeze(-1), grid_y.unsqueeze(-1)], -1)  # H_, W_, 2
 
         scale = torch.cat([valid_W.unsqueeze(-1), valid_H.unsqueeze(-1)], 1).view(N_, 1, 1, 2)
         grid = (grid.unsqueeze(0).expand(N_, -1, -1, -1) + 0.5) / scale
@@ -50,7 +50,7 @@ def gen_encoder_output_proposals(memory:Tensor, memory_padding_mask:Tensor, spat
 
     output_proposals = torch.cat(proposals, 1)
     output_proposals_valid = ((output_proposals > 0.01) & (output_proposals < 0.99)).all(-1, keepdim=True)
-    output_proposals = torch.log(output_proposals / (1 - output_proposals)) # unsigmoid
+    output_proposals = torch.log(output_proposals / (1 - output_proposals))  # unsigmoid
     output_proposals = output_proposals.masked_fill(memory_padding_mask.unsqueeze(-1), float('inf'))
     output_proposals = output_proposals.masked_fill(~output_proposals_valid, float('inf'))
 

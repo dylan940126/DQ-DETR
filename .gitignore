@@ -111,6 +111,7 @@ data
 .DS_Store
 logs/
 /checkpoints/
+/aitod/
 
 # custom
 *.pkl

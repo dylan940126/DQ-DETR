@@ -78,6 +78,7 @@ def plot_logs(logs, fields=('class_error', 'loss_bbox_unscaled', 'mAP'), ewm_col
 
     return fig, axs
 
+
 def plot_precision_recall(files, naming_scheme='iter'):
     if naming_scheme == 'exp_id':
         # name becomes exp_id

@@ -3,6 +3,7 @@
 # ==========================================================
 
 import json, pickle, yaml
+
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -10,6 +11,7 @@ except ImportError:
 
 from pathlib import Path
 from abc import ABCMeta, abstractmethod
+
 
 # ===========================
 # Rigister handler
@@ -37,6 +39,7 @@ class BaseFileHandler(metaclass=ABCMeta):
         with open(filepath, mode) as f:
             self.dump_to_fileobj(obj, f, **kwargs)
 
+
 class JsonHandler(BaseFileHandler):
 
     def load_from_fileobj(self, file):
@@ -47,6 +50,7 @@ class JsonHandler(BaseFileHandler):
 
     def dump_to_str(self, obj, **kwargs):
         return json.dumps(obj, **kwargs)
+
 
 class PickleHandler(BaseFileHandler):
 
@@ -69,6 +73,7 @@ class PickleHandler(BaseFileHandler):
         super(PickleHandler, self).dump_to_path(
             obj, filepath, mode='wb', **kwargs)
 
+
 class YamlHandler(BaseFileHandler):
 
     def load_from_fileobj(self, file, **kwargs):
@@ -83,6 +88,7 @@ class YamlHandler(BaseFileHandler):
         kwargs.setdefault('Dumper', Dumper)
         return yaml.dump(obj, **kwargs)
 
+
 file_handlers = {
     'json': JsonHandler(),
     'yaml': YamlHandler(),
@@ -90,6 +96,7 @@ file_handlers = {
     'pickle': PickleHandler(),
     'pkl': PickleHandler()
 }
+
 
 # ===========================
 # load and dump
@@ -101,6 +108,7 @@ def is_str(x):
     Note: This method is deprecated since python 2 is no longer supported.
     """
     return isinstance(x, str)
+
 
 def slload(file, file_format=None, **kwargs):
     """Load data from json/yaml/pickle files.

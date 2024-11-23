@@ -152,5 +152,3 @@ def dn_post_process(outputs_class, outputs_coord, dn_meta, aux_loss, _set_aux_lo
             out['aux_outputs'] = _set_aux_loss(output_known_class, output_known_coord)
         dn_meta['output_known_lbs_bboxes'] = out
     return outputs_class, outputs_coord
-
-

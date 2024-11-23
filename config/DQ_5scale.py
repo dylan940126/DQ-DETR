@@ -1,6 +1,6 @@
 _base_ = ['coco_transformer.py']
 
-num_classes=9
+num_classes = 9
 lr = 0.0001
 param_dict_type = 'default'
 lr_backbone = 1e-05
@@ -113,4 +113,3 @@ ema_decay = 0.9997
 ema_epoch = 0
 
 use_detached_boxes_dec_out = False
-

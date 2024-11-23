@@ -96,7 +96,6 @@ class CocoEvaluator(object):
             else:
                 labels = prediction["labels"]
 
-        
             try:
                 coco_results.extend(
                     [
@@ -110,7 +109,8 @@ class CocoEvaluator(object):
                     ]
                 )
             except:
-                import ipdb; ipdb.set_trace()
+                import ipdb;
+                ipdb.set_trace()
         return coco_results
 
     def prepare_for_coco_segmentation(self, predictions):
@@ -231,7 +231,6 @@ def evaluate(self):
     p.imgIds = list(np.unique(p.imgIds))
     if p.useCats:
         p.catIds = list(np.unique(p.catIds))
-    
 
     p.maxDets = sorted(p.maxDets)
     self.params = p
@@ -252,7 +251,6 @@ def evaluate(self):
     evaluateImg = self.evaluateImg
     maxDet = p.maxDets[-1]
 
-    
     evalImgs = [
         evaluateImg(imgId, catId, areaRng, maxDet)
         for catId in catIds

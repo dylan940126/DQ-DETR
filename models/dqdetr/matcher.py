@@ -29,7 +29,7 @@ class HungarianMatcher(nn.Module):
     while the others are un-matched (and thus treated as non-objects).
     """
 
-    def __init__(self, cost_class: float = 1, cost_bbox: float = 1, cost_giou: float = 1, focal_alpha = 0.25):
+    def __init__(self, cost_class: float = 1, cost_bbox: float = 1, cost_giou: float = 1, focal_alpha=0.25):
         """Creates the matcher
         Params:
             cost_class: This is the relative weight of the classification error in the matching cost
@@ -82,7 +82,7 @@ class HungarianMatcher(nn.Module):
 
         # Compute the L1 cost between boxes
         cost_bbox = torch.cdist(out_bbox, tgt_bbox, p=1)
-            
+
         # Compute the giou cost betwen boxes            
         cost_giou = -generalized_box_iou(box_cxcywh_to_xyxy(out_bbox), box_cxcywh_to_xyxy(tgt_bbox))
 
@@ -102,7 +102,7 @@ class SimpleMinsumMatcher(nn.Module):
     while the others are un-matched (and thus treated as non-objects).
     """
 
-    def __init__(self, cost_class: float = 1, cost_bbox: float = 1, cost_giou: float = 1, focal_alpha = 0.25):
+    def __init__(self, cost_class: float = 1, cost_bbox: float = 1, cost_giou: float = 1, focal_alpha=0.25):
         """Creates the matcher
         Params:
             cost_class: This is the relative weight of the classification error in the matching cost
@@ -155,7 +155,7 @@ class SimpleMinsumMatcher(nn.Module):
 
         # Compute the L1 cost between boxes
         cost_bbox = torch.cdist(out_bbox, tgt_bbox, p=1)
-            
+
         # Compute the giou cost betwen boxes            
         cost_giou = -generalized_box_iou(box_cxcywh_to_xyxy(out_bbox), box_cxcywh_to_xyxy(tgt_bbox))
 
@@ -176,7 +176,8 @@ class SimpleMinsumMatcher(nn.Module):
 
 
 def build_matcher(args):
-    assert args.matcher_type in ['HungarianMatcher', 'SimpleMinsumMatcher'], "Unknown args.matcher_type: {}".format(args.matcher_type)
+    assert args.matcher_type in ['HungarianMatcher', 'SimpleMinsumMatcher'], "Unknown args.matcher_type: {}".format(
+        args.matcher_type)
     if args.matcher_type == 'HungarianMatcher':
         return HungarianMatcher(
             cost_class=args.set_cost_class, cost_bbox=args.set_cost_bbox, cost_giou=args.set_cost_giou,
@@ -186,6 +187,6 @@ def build_matcher(args):
         return SimpleMinsumMatcher(
             cost_class=args.set_cost_class, cost_bbox=args.set_cost_bbox, cost_giou=args.set_cost_giou,
             focal_alpha=args.focal_alpha
-        )    
+        )
     else:
         raise NotImplementedError("Unknown args.matcher_type: {}".format(args.matcher_type))
